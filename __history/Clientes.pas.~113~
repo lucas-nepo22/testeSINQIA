@@ -1,0 +1,340 @@
+unit Clientes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Buttons, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls, Modulo;
+
+type
+  TFrmClientes = class(TForm)
+    edtCodCliente: TEdit;
+    lblCodCliente: TLabel;
+    edtCPF: TEdit;
+    edtNome: TEdit;
+    edtTelefone: TEdit;
+    edtEndereco: TEdit;
+    lblCPF: TLabel;
+    lblNome: TLabel;
+    lblTelefone: TLabel;
+    lblBuscar: TLabel;
+    edtBuscar: TEdit;
+    DBGrid1: TDBGrid;
+    btnNovo: TSpeedButton;
+    btnSalvar: TSpeedButton;
+    btnEditar: TSpeedButton;
+    btnExcluir: TSpeedButton;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    lblEndereco: TLabel;
+    edtBairro: TEdit;
+    lblBairro: TLabel;
+    lblComplemento: TLabel;
+    edtComplemento: TEdit;
+    edtEmail: TEdit;
+    lblEmail: TLabel;
+    lblCodCidade: TLabel;
+    lblCEP: TLabel;
+    edtCEP: TEdit;
+    cmbCidades: TComboBox;
+    btnRel: TSpeedButton;
+    Label5: TLabel;
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure btnEditarClick(Sender: TObject);
+    procedure btnExcluirClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+    procedure edtBuscarChange(Sender: TObject);
+    procedure btnRelClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure limparCampos();
+    procedure habilitarCampos();
+    procedure desabilitarCampos();
+    procedure buscarTudo();
+    procedure buscarNome();
+    procedure associarCampos();
+    procedure CarregarCidades();
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmClientes: TFrmClientes;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrmClientes.associarCampos;
+begin
+  dm.tb_clientes.FieldByName('CGC_CPF_Cliente').Value := edtCPF.Text;
+  dm.tb_clientes.FieldByName('Nome').Value := edtNome.Text;
+  dm.tb_clientes.FieldByName('Telefone').Value := edtTelefone.Text;
+  dm.tb_clientes.FieldByName('Endereco').Value := edtEndereco.Text;
+  dm.tb_clientes.FieldByName('Bairro').Value := edtBairro.Text;
+  dm.tb_clientes.FieldByName('Complemento').Value := edtComplemento.Text;
+  dm.tb_clientes.FieldByName('E_mail').Value := edtEmail.Text;
+  dm.tb_clientes.FieldByName('Codigo_Cidade').AsInteger := Integer(cmbCidades.Items.Objects[cmbCidades.ItemIndex]);
+  dm.tb_clientes.FieldByName('Cep').Value := edtCEP.Text;
+end;
+
+procedure TFrmClientes.btnEditarClick(Sender: TObject);
+var
+  CodigoCidade: Integer;
+begin
+  if (edtCPF.Text <> '') and (edtNome.Text <> '') then
+  begin
+    associarCampos;
+    dm.tb_clientes.Edit;
+    CodigoCidade := Integer(cmbCidades.Items.Objects[cmbCidades.ItemIndex]);
+
+    dm.query_Clientes.Close;
+    dm.query_Clientes.SQL.Clear;
+    dm.query_Clientes.SQL.Add('UPDATE clientes SET');
+    dm.query_Clientes.SQL.Add('CGC_CPF_Cliente = :CGC_CPF_Cliente,');
+    dm.query_Clientes.SQL.Add('Nome = :Nome,');
+    dm.query_Clientes.SQL.Add('Telefone = :Telefone,');
+    dm.query_Clientes.SQL.Add('Endereco = :Endereco,');
+    dm.query_Clientes.SQL.Add('Bairro = :Bairro,');
+    dm.query_Clientes.SQL.Add('Complemento = :Complemento,');
+    dm.query_Clientes.SQL.Add('E_mail = :E_mail,');
+    dm.query_Clientes.SQL.Add('Codigo_Cidade = :Codigo_Cidade,');
+    dm.query_Clientes.SQL.Add('Cep = :Cep');
+    dm.query_Clientes.SQL.Add('WHERE Codigo_Cliente = :Codigo_Cliente');
+
+    dm.query_Clientes.ParamByName('CGC_CPF_Cliente').Value := edtCPF.Text;
+    dm.query_Clientes.ParamByName('Nome').Value := edtNome.Text;
+    dm.query_Clientes.ParamByName('Telefone').Value := edtTelefone.Text;
+    dm.query_Clientes.ParamByName('Endereco').Value := edtEndereco.Text;
+    dm.query_Clientes.ParamByName('Bairro').Value := edtBairro.Text;
+    dm.query_Clientes.ParamByName('Complemento').Value := edtComplemento.Text;
+    dm.query_Clientes.ParamByName('E_mail').Value := edtEmail.Text;
+    dm.query_Clientes.ParamByName('Codigo_Cidade').Value := CodigoCidade;
+    dm.query_Clientes.ParamByName('Cep').Value := edtCEP.Text;
+    dm.query_Clientes.ParamByName('codigo_cliente').Value := edtCodCliente.Text;
+    dm.query_Clientes.ExecSql;
+
+    MessageDlg('Editado com Sucesso!!', mtInformation, mbOKCancel, 0);
+    buscarTudo;
+    desabilitarCampos;
+    btnSalvar.Enabled := false;
+    btnEditar.Enabled := false;
+    btnExcluir.Enabled := false;
+    btnNovo.Enabled := true;
+  end
+  else
+  begin
+    MessageDlg('Preencha os Campos', mtInformation, mbOKCancel, 0);
+  end;
+end;
+
+procedure TFrmClientes.btnExcluirClick(Sender: TObject);
+begin
+if Messagedlg('Deseja excluir o registro?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    associarCampos;
+    dm.tb_clientes.Delete;
+    MessageDlg('Excluido com Sucesso!!', mtInformation, mbOKCancel, 0);
+    buscarTudo;
+    desabilitarCampos;
+    btnSalvar.Enabled := false;
+    btnEditar.Enabled := false;
+    btnExcluir.Enabled := false;
+    btnNovo.Enabled := true;
+  end;
+end;
+
+procedure TFrmClientes.btnNovoClick(Sender: TObject);
+begin
+  limparCampos;
+  habilitarCampos;
+  dm.tb_clientes.Insert;
+  BtnSalvar.Enabled := true;
+  btnNovo.Enabled := false;
+  btnEditar.Enabled := false;
+  btnExcluir.Enabled := false;
+end;
+
+procedure TFrmClientes.btnRelClick(Sender: TObject);
+begin
+  dm.rel_Clientes.LoadFromFile(GetCurrentDir + '\rel\Clientes.fr3');
+  dm.rel_Clientes.ShowReport();
+end;
+
+procedure TFrmClientes.btnSalvarClick(Sender: TObject);
+var
+  CodigoCidade: Integer;
+begin
+  if (edtCPF.Text <> '') and (edtNome.Text <> '') then
+  begin
+    if cmbCidades.ItemIndex = -1 then
+    begin
+      MessageDlg('Por favor, selecione uma cidade.', mtWarning, [mbOK], 0);
+      Exit;
+    end;
+    CodigoCidade := Integer(cmbCidades.Items.Objects[cmbCidades.ItemIndex]);
+    associarCampos;
+    dm.tb_clientes.FieldByName('Codigo_Cidade').AsInteger := CodigoCidade;
+    dm.tb_clientes.Post;
+    MessageDlg('Salvo com Sucesso!!', mtInformation, [mbOK], 0);
+    buscarTudo;
+    desabilitarCampos;
+    btnSalvar.Enabled := False;
+    btnNovo.Enabled := True;
+    btnEditar.Enabled := False;
+    btnExcluir.Enabled := False;
+  end
+  else
+  begin
+    MessageDlg('Preencha os Campos', mtInformation, [mbOK], 0);
+  end;
+end;
+
+procedure TFrmClientes.buscarNome;
+begin
+  dm.query_Clientes.Close;
+  dm.query_Clientes.SQL.Clear;
+  dm.query_Clientes.SQL.Add('select * from clientes where nome LIKE :nome order by nome asc');
+  dm.query_Clientes.ParamByName('nome').Value := edtBuscar.Text + '%';
+  dm.query_Clientes.Open;
+end;
+
+procedure TFrmClientes.buscarTudo;
+begin
+  dm.query_Clientes.Close;
+  dm.query_Clientes.SQL.Clear;
+  dm.query_Clientes.SQL.Add('select * from clientes order by nome asc');
+  dm.query_Clientes.Open;
+end;
+
+procedure TFrmClientes.CarregarCidades;
+begin
+  cmbCidades.Clear;
+
+  dm.query_Cidades.Close;
+  dm.query_Cidades.SQL.Text := 'SELECT Codigo_Cidade, Nome, Estado, Cep_Inicial, Cep_Final FROM cidades ORDER BY Nome';
+  dm.query_Cidades.Open;
+  while not dm.query_Cidades.Eof do
+  begin
+    cmbCidades.Items.AddObject(dm.query_Cidades.FieldByName('Nome').AsString,
+      TObject(dm.query_Cidades.FieldByName('Codigo_Cidade').AsInteger));
+    dm.query_Cidades.Next;
+  end;
+end;
+
+procedure TFrmClientes.DBGrid1CellClick(Column: TColumn);
+var
+  CodigoCidade: Integer;
+begin
+  if dm.query_Clientes.RecordCount > 0 then
+  begin
+    dm.tb_clientes.Edit;
+    btnEditar.Enabled := True;
+    btnExcluir.Enabled := True;
+    habilitarCampos;
+
+    if not dm.query_Clientes.FieldByName('CGC_CPF_Cliente').IsNull then
+      edtCPF.Text := dm.query_Clientes.FieldByName('CGC_CPF_Cliente').Value;
+
+    if not dm.query_Clientes.FieldByName('nome').IsNull then
+      edtNome.Text := dm.query_Clientes.FieldByName('nome').Value;
+
+    if not dm.query_Clientes.FieldByName('telefone').IsNull then
+      edtTelefone.Text := dm.query_Clientes.FieldByName('telefone').Value;
+
+    if not dm.query_Clientes.FieldByName('endereco').IsNull then
+      edtEndereco.Text := dm.query_Clientes.FieldByName('endereco').Value;
+
+    if not dm.query_Clientes.FieldByName('bairro').IsNull then
+      edtBairro.Text := dm.query_Clientes.FieldByName('bairro').Value;
+
+    if not dm.query_Clientes.FieldByName('Complemento').IsNull then
+      edtComplemento.Text := dm.query_Clientes.FieldByName('Complemento').Value;
+
+    if not dm.query_Clientes.FieldByName('E_mail').IsNull then
+      edtEmail.Text := dm.query_Clientes.FieldByName('E_mail').Value;
+
+    if not dm.query_Clientes.FieldByName('Cep').IsNull then
+      edtCEP.Text := dm.query_Clientes.FieldByName('Cep').Value;
+
+    if not dm.query_Clientes.FieldByName('Codigo_cidade').IsNull then
+    begin
+      CodigoCidade := dm.query_Clientes.FieldByName('Codigo_cidade').AsInteger;
+      if cmbCidades.Items.IndexOfObject(TObject(CodigoCidade)) <> -1 then
+        cmbCidades.ItemIndex := cmbCidades.Items.IndexOfObject(TObject(CodigoCidade));
+    end;
+
+    if not dm.query_Clientes.FieldByName('Codigo_cliente').IsNull then
+      edtCodCliente.Text := dm.query_Clientes.FieldByName('Codigo_cliente').Value;
+  end;
+end;
+
+
+procedure TFrmClientes.desabilitarCampos;
+begin
+  limparcampos();
+  edtCPF.Enabled := False ;
+  edtNome.Enabled := False;
+  edtTelefone.Enabled := False;
+  edtEndereco.Enabled := False;
+  edtBairro.Enabled := False ;
+  edtComplemento.Enabled := False;
+  edtEmail.Enabled := False;
+  edtCEP.Enabled := False;
+  cmbCidades.Enabled  := False;
+end;
+
+procedure TFrmClientes.edtBuscarChange(Sender: TObject);
+begin
+  buscarNome;
+end;
+
+procedure TFrmClientes.FormShow(Sender: TObject);
+begin
+  buscarTudo;
+  CarregarCidades;
+
+  btnSalvar.Enabled := false;
+  btnEditar.Enabled := false;
+  btnExcluir.Enabled := false;
+ // btnRel.Enabled := false;
+
+  dm.tb_clientes.Active := true;
+end;
+
+procedure TFrmClientes.habilitarCampos;
+begin
+  limparcampos();
+  edtCPF.Enabled := True ;
+  edtNome.Enabled := True;
+  edtTelefone.Enabled := True;
+  edtEndereco.Enabled := True;
+  edtBairro.Enabled := True ;
+  edtComplemento.Enabled := True;
+  edtEmail.Enabled := True;
+  edtCEP.Enabled := True;
+  cmbCidades.Enabled  := True;
+  edtCPF.SetFocus;
+
+end;
+
+procedure TFrmClientes.limparCampos;
+begin
+  edtCPF.Text := '';
+  edtNome.Text := '';
+  edtTelefone.Text := '';
+  edtEndereco.Text := '';
+  edtBairro.Text := '';
+  edtComplemento.Text := '';
+  edtEmail.Text := '';
+  edtCEP.Text := '';
+  cmbCidades.Text := '';
+end;
+
+end.
+

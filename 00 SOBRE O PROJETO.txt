@@ -1,0 +1,7 @@
+Tecnologias utilizadas:
+- Delphi 11
+- Banco de Dados MySQL
+- XAMPP Control Panel v3.3.0
+- FastReport para relatório
+
+obs: pasta lib deve estar no disco local C!!

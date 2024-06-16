@@ -1,0 +1,1 @@
+Pasta lib -> colar no disco C: para execução

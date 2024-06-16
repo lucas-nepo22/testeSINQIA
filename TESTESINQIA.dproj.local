@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2024/06/13 20:02:02.000.230,=C:\Users\lucas\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2024/06/13 20:02:56.000.212,C:\Users\lucas\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Cidades.pas</Transaction>
+    <Transaction>2024/06/13 20:02:56.000.212,C:\Users\lucas\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Cidades.dfm</Transaction>
+    <Transaction>2024/06/13 20:03:34.000.047,C:\Users\lucas\OneDrive\Documentos\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\TESTESINQIA.dproj</Transaction>
+    <Transaction>2024/06/13 20:18:09.000.611,=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.pas</Transaction>
+    <Transaction>2024/06/13 20:18:17.000.117,C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.dfm=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Principal.dfm</Transaction>
+    <Transaction>2024/06/13 20:18:17.000.117,C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.pas=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Principal.pas</Transaction>
+    <Transaction>2024/06/13 21:02:36.000.981,=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.pas</Transaction>
+    <Transaction>2024/06/13 21:02:59.000.842,C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.dfm=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Clientes.dfm</Transaction>
+    <Transaction>2024/06/13 21:02:59.000.842,C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.pas=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Clientes.pas</Transaction>
+    <Transaction>2024/06/13 21:19:38.000.526,=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.pas</Transaction>
+    <Transaction>2024/06/13 21:20:03.000.328,C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.dfm=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Modulo.dfm</Transaction>
+    <Transaction>2024/06/13 21:20:03.000.328,C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.pas=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Modulo.pas</Transaction>
+    <Transaction>2024/06/15 11:43:49.000.759,=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.pas</Transaction>
+    <Transaction>2024/06/15 11:44:04.000.901,C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.pas=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Relatorio.pas</Transaction>
+    <Transaction>2024/06/15 11:44:04.000.901,C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Unit1.dfm=C:\Users\lucas\OneDrive\Área de Trabalho\PROJETO AVALIAÇÃO LUCAS\Relatorio.dfm</Transaction>
+  </Transactions>
+</BorlandProject>

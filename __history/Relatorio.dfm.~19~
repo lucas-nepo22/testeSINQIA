@@ -1,0 +1,159 @@
+object FrmRelatorio: TFrmRelatorio
+  Left = 0
+  Top = 0
+  Caption = 'FrmRelatorio'
+  ClientHeight = 197
+  ClientWidth = 401
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  OnCreate = FormCreate
+  OnShow = FormShow
+  TextHeight = 15
+  object lblCodClienteInicial: TLabel
+    Left = 32
+    Top = 19
+    Width = 99
+    Height = 15
+    Caption = 'C'#243'd. Cliente Inicial'
+  end
+  object lblCodClienteFinal: TLabel
+    Left = 226
+    Top = 19
+    Width = 93
+    Height = 15
+    Caption = 'C'#243'd. Cliente Final'
+  end
+  object lblCidade: TLabel
+    Left = 32
+    Top = 83
+    Width = 37
+    Height = 15
+    Caption = 'Cidade'
+  end
+  object lblEstado: TLabel
+    Left = 226
+    Top = 83
+    Width = 35
+    Height = 15
+    Caption = 'Estado'
+  end
+  object edtCodigoClienteInicial: TEdit
+    Left = 32
+    Top = 40
+    Width = 162
+    Height = 23
+    TabOrder = 0
+  end
+  object edtCodigoClienteFinal: TEdit
+    Left = 226
+    Top = 40
+    Width = 162
+    Height = 23
+    TabOrder = 1
+  end
+  object cmbCodigoCidade: TComboBox
+    Left = 32
+    Top = 104
+    Width = 162
+    Height = 23
+    TabOrder = 2
+  end
+  object cmbEstado: TComboBox
+    Left = 226
+    Top = 104
+    Width = 162
+    Height = 23
+    TabOrder = 3
+  end
+  object btnGerarRelatorio: TButton
+    Left = 289
+    Top = 148
+    Width = 99
+    Height = 33
+    Caption = 'Gerar Relat'#243'ro'
+    TabOrder = 4
+    OnClick = btnGerarRelatorioClick
+  end
+  object query_Clientes: TFDQuery
+    SQL.Strings = (
+      'SELECT '
+      '  c.Codigo_Cliente, '
+      '  c.CGC_CPF_Cliente, '
+      '  c.Nome, '
+      '  c.Telefone, '
+      '  c.Endereco, '
+      '  c.Bairro, '
+      '  c.Complemento, '
+      '  c.E_mail, '
+      '  ci.Nome AS Cidade, '
+      '  c.Cep'
+      'FROM '
+      '  CLIENTES c'
+      'JOIN '
+      '  CIDADES ci ON c.Codigo_Cidade = ci.Codigo_Cidade'
+      'WHERE '
+      
+        '  (:CodigoClienteInicial IS NULL OR c.Codigo_Cliente >= :CodigoC' +
+        'lienteInicial) AND'
+      
+        '  (:CodigoClienteFinal IS NULL OR c.Codigo_Cliente <= :CodigoCli' +
+        'enteFinal) AND'
+      '  (:CodigoCidade IS NULL OR c.Codigo_Cidade = :CodigoCidade) AND'
+      '  (:Estado IS NULL OR ci.Estado = :Estado)'
+      'ORDER BY '
+      '  c.Nome;')
+    Left = 24
+    Top = 152
+    ParamData = <
+      item
+        Name = 'CODIGOCLIENTEINICIAL'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CODIGOCLIENTEFINAL'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CODIGOCIDADE'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ESTADO'
+        ParamType = ptInput
+      end>
+  end
+  object frxReport1: TfrxReport
+    Version = '2022.1.3'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick, pbCopy, pbSelection]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Padr'#227'o'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 45459.369488715270000000
+    ReportOptions.LastChange = 45459.369488715270000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      'begin'
+      ''
+      'end.')
+    Left = 120
+    Top = 152
+    Datasets = <>
+    Variables = <>
+    Style = <>
+  end
+  object rel_ds_clientes: TfrxDBDataset
+    UserName = 'DSClientes'
+    CloseDataSource = False
+    DataSet = query_Clientes
+    BCDToCurrency = False
+    DataSetOptions = []
+    Left = 197
+    Top = 153
+  end
+end

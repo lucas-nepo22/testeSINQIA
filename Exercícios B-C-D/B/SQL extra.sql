@@ -1,0 +1,4 @@
+CREATE VIEW vw_cidades AS
+SELECT *
+FROM CIDADES;
+

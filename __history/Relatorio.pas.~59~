@@ -1,0 +1,166 @@
+unit Relatorio;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Modulo, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, frxClass, frxDBSet;
+
+type
+  TFrmRelatorio = class(TForm)
+    edtCodigoClienteInicial: TEdit;
+    edtCodigoClienteFinal: TEdit;
+    lblCodClienteInicial: TLabel;
+    lblCodClienteFinal: TLabel;
+    cmbCodigoCidade: TComboBox;
+    lblCidade: TLabel;
+    cmbEstado: TComboBox;
+    lblEstado: TLabel;
+    btnGerarRelatorio: TButton;
+    query_Clientes: TFDQuery;
+    rel_ds_clientes: TfrxDBDataset;
+    frxReport1: TfrxReport;
+    procedure FormShow(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btnGerarRelatorioClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure CarregarCidades();
+    procedure CarregarEstados();
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmRelatorio: TFrmRelatorio;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrmRelatorio.CarregarEstados;
+var
+  EstadoAtual: string;
+begin
+  cmbEstado.Clear;
+  dm.query_Cidades.Close;
+  dm.query_Cidades.SQL.Text := 'SELECT DISTINCT Codigo_Cidade, Estado, 	Nome, Cep_Inicial, Cep_Final FROM cidades ORDER BY Estado';
+  dm.query_Cidades.Open;
+
+  while not dm.query_Cidades.Eof do
+  begin
+    EstadoAtual := dm.query_Cidades.FieldByName('Estado').AsString;
+    if cmbEstado.Items.IndexOf(EstadoAtual) = -1 then
+       cmbEstado.Items.Add(EstadoAtual);
+       dm.query_Cidades.Next;
+  end;
+end;
+
+procedure TFrmRelatorio.FormCreate(Sender: TObject);
+begin
+  CarregarCidades;
+  CarregarEstados;
+end;
+
+procedure TFrmRelatorio.FormShow(Sender: TObject);
+begin
+  dm.tb_clientes.Active := true;
+end;
+
+procedure TFrmRelatorio.btnGerarRelatorioClick(Sender: TObject);
+var
+  CodigoClienteInicial, CodigoClienteFinal: Integer;
+begin
+  if (edtCodigoClienteInicial.Text = '') or
+     (edtCodigoClienteFinal.Text = '') or
+     (cmbCodigoCidade.ItemIndex = -1) or
+     (cmbEstado.ItemIndex = -1) then
+  begin
+    ShowMessage('Por favor, preencha todos os campos para gerar o relatório.');
+    Exit;
+  end;
+
+  query_Clientes.Close;
+  query_Clientes.SQL.Text :=
+    'SELECT ' +
+    '  c.Codigo_Cliente, ' +
+    '  c.CGC_CPF_Cliente, ' +
+    '  c.Nome, ' +
+    '  c.Telefone, ' +
+    '  c.Endereco, ' +
+    '  c.Bairro, ' +
+    '  c.Complemento, ' +
+    '  c.E_mail, ' +
+    '  ci.Nome AS Cidade, ' +
+    '  c.Cep ' +
+    'FROM ' +
+    '  CLIENTES c ' +
+    'JOIN ' +
+    '  CIDADES ci ON c.Codigo_Cidade = ci.Codigo_Cidade ' +
+    'WHERE ' +
+    '  (:CodigoClienteInicial IS NULL OR c.Codigo_Cliente >= :CodigoClienteInicial) AND ' +
+    '  (:CodigoClienteFinal IS NULL OR c.Codigo_Cliente <= :CodigoClienteFinal) AND ' +
+    '  (:CodigoCidade IS NULL OR c.Codigo_Cidade = :CodigoCidade) AND ' +
+    '  (:Estado IS NULL OR ci.Estado = :Estado) ' +
+    'ORDER BY ' +
+    '  ci.Nome, c.Nome';
+
+  CodigoClienteInicial := StrToIntDef(edtCodigoClienteInicial.Text, 0);
+  CodigoClienteFinal := StrToIntDef(edtCodigoClienteFinal.Text, 0);
+
+  if CodigoClienteInicial <> 0 then
+  begin
+    query_Clientes.ParamByName('CodigoClienteInicial').DataType := ftInteger;
+    query_Clientes.ParamByName('CodigoClienteInicial').AsInteger := CodigoClienteInicial;
+  end
+  else
+    query_Clientes.ParamByName('CodigoClienteInicial').Clear;
+
+  if CodigoClienteFinal <> 0 then
+  begin
+    query_Clientes.ParamByName('CodigoClienteFinal').DataType := ftInteger;
+    query_Clientes.ParamByName('CodigoClienteFinal').AsInteger := CodigoClienteFinal;
+  end
+  else
+    query_Clientes.ParamByName('CodigoClienteFinal').Clear;
+
+  if cmbCodigoCidade.ItemIndex > -1 then
+  begin
+    query_Clientes.ParamByName('CodigoCidade').DataType := ftInteger;
+    query_Clientes.ParamByName('CodigoCidade').AsInteger := Integer(cmbCodigoCidade.Items.Objects[cmbCodigoCidade.ItemIndex]);
+  end
+  else
+    query_Clientes.ParamByName('CodigoCidade').Clear;
+
+  if cmbEstado.ItemIndex > -1 then
+  begin
+    query_Clientes.ParamByName('Estado').DataType := ftString;
+    query_Clientes.ParamByName('Estado').AsString := cmbEstado.Text;
+  end
+  else
+    query_Clientes.ParamByName('Estado').Clear;
+
+  query_Clientes.Open;
+  frxReport1.LoadFromFile('CaminhoDoSeuRelatorio.fr3');
+  frxReport1.ShowReport;
+end;
+
+procedure TFrmRelatorio.CarregarCidades;
+begin
+  cmbCodigoCidade.Clear;
+  dm.query_Cidades.Close;
+  dm.query_Cidades.SQL.Text := 'SELECT Codigo_Cidade, Nome, Estado, Cep_Inicial, Cep_Final FROM cidades ORDER BY Nome';
+  dm.query_Cidades.Open;
+
+  while not dm.query_Cidades.Eof do
+  begin
+    cmbCodigoCidade.Items.AddObject(dm.query_Cidades.FieldByName('Nome').AsString,
+      TObject(dm.query_Cidades.FieldByName('Codigo_Cidade').AsInteger));
+    dm.query_Cidades.Next;
+  end;
+end;
+
+end.

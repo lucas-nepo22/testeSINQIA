@@ -1,0 +1,17 @@
+program TESTESINQIA;
+
+uses
+  Vcl.Forms,
+  Cidades in 'Cidades.pas' {FrmCidades},
+  Principal in 'Principal.pas' {FrmPrincipal},
+  Clientes in 'Clientes.pas' {FrmClientes};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFrmPrincipal, FrmPrincipal);
+  Application.CreateForm(TFrmClientes, FrmClientes);
+  Application.Run;
+end.

@@ -1,0 +1,67 @@
+unit Modulo;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MySQLDef,
+  FireDAC.VCLUI.Wait, FireDAC.Comp.UI, FireDAC.Phys.MySQL, Data.DB,
+  FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.DApt, FireDAC.Comp.DataSet, frxClass, frxDBSet;
+
+type
+  Tdm = class(TDataModule)
+    FDConnection1: TFDConnection;
+    FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    tb_cidades: TFDTable;
+    tb_cidadesCodigo_Cidade: TFDAutoIncField;
+    tb_cidadesNome: TStringField;
+    tb_cidadesEstado: TStringField;
+    tb_cidadesCep_Inicial: TStringField;
+    tb_cidadesCep_Final: TStringField;
+    DSCidades: TDataSource;
+    query_Cidades: TFDQuery;
+    query_CidadesCodigo_Cidade: TFDAutoIncField;
+    query_CidadesNome: TStringField;
+    query_CidadesEstado: TStringField;
+    query_CidadesCep_Inicial: TStringField;
+    query_CidadesCep_Final: TStringField;
+    rel_Cidades: TfrxReport;
+    rel_ds_cidades: TfrxDBDataset;
+    query_Clientes: TFDQuery;
+    FDAutoIncField1: TFDAutoIncField;
+    StringField1: TStringField;
+    StringField2: TStringField;
+    StringField3: TStringField;
+    StringField4: TStringField;
+    DSClientes: TDataSource;
+    tb_clientes: TFDTable;
+    FDAutoIncField2: TFDAutoIncField;
+    StringField5: TStringField;
+    StringField6: TStringField;
+    StringField7: TStringField;
+    StringField8: TStringField;
+    procedure DataModuleCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  dm: Tdm;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure Tdm.DataModuleCreate(Sender: TObject);
+begin
+FDConnection1.Connected := True;
+end;
+
+end.

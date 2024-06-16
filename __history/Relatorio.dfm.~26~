@@ -1,0 +1,348 @@
+object FrmRelatorio: TFrmRelatorio
+  Left = 0
+  Top = 0
+  Caption = 'FrmRelatorio'
+  ClientHeight = 197
+  ClientWidth = 401
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  OnCreate = FormCreate
+  OnShow = FormShow
+  TextHeight = 15
+  object lblCodClienteInicial: TLabel
+    Left = 32
+    Top = 19
+    Width = 99
+    Height = 15
+    Caption = 'C'#243'd. Cliente Inicial'
+  end
+  object lblCodClienteFinal: TLabel
+    Left = 226
+    Top = 19
+    Width = 93
+    Height = 15
+    Caption = 'C'#243'd. Cliente Final'
+  end
+  object lblCidade: TLabel
+    Left = 32
+    Top = 83
+    Width = 37
+    Height = 15
+    Caption = 'Cidade'
+  end
+  object lblEstado: TLabel
+    Left = 226
+    Top = 83
+    Width = 35
+    Height = 15
+    Caption = 'Estado'
+  end
+  object edtCodigoClienteInicial: TEdit
+    Left = 32
+    Top = 40
+    Width = 162
+    Height = 23
+    TabOrder = 0
+  end
+  object edtCodigoClienteFinal: TEdit
+    Left = 226
+    Top = 40
+    Width = 162
+    Height = 23
+    TabOrder = 1
+  end
+  object cmbCodigoCidade: TComboBox
+    Left = 32
+    Top = 104
+    Width = 162
+    Height = 23
+    TabOrder = 2
+  end
+  object cmbEstado: TComboBox
+    Left = 226
+    Top = 104
+    Width = 162
+    Height = 23
+    TabOrder = 3
+  end
+  object btnGerarRelatorio: TButton
+    Left = 289
+    Top = 148
+    Width = 99
+    Height = 33
+    Caption = 'Gerar Relat'#243'ro'
+    TabOrder = 4
+    OnClick = btnGerarRelatorioClick
+  end
+  object query_Clientes: TFDQuery
+    Connection = dm.FDConnection1
+    SQL.Strings = (
+      'SELECT '
+      '  c.Codigo_Cliente, '
+      '  c.CGC_CPF_Cliente, '
+      '  c.Nome, '
+      '  c.Telefone, '
+      '  c.Endereco, '
+      '  c.Bairro, '
+      '  c.Complemento, '
+      '  c.E_mail, '
+      '  ci.Nome AS Cidade, '
+      '  c.Cep'
+      'FROM '
+      '  CLIENTES c'
+      'JOIN '
+      '  CIDADES ci ON c.Codigo_Cidade = ci.Codigo_Cidade'
+      'WHERE '
+      
+        '  (:CodigoClienteInicial IS NULL OR c.Codigo_Cliente >= :CodigoC' +
+        'lienteInicial) AND'
+      
+        '  (:CodigoClienteFinal IS NULL OR c.Codigo_Cliente <= :CodigoCli' +
+        'enteFinal) AND'
+      '  (:CodigoCidade IS NULL OR c.Codigo_Cidade = :CodigoCidade) AND'
+      '  (:Estado IS NULL OR ci.Estado = :Estado)'
+      'ORDER BY '
+      '  c.Nome;')
+    Left = 24
+    Top = 152
+    ParamData = <
+      item
+        Name = 'CODIGOCLIENTEINICIAL'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CODIGOCLIENTEFINAL'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CODIGOCIDADE'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ESTADO'
+        ParamType = ptInput
+      end>
+  end
+  object rel_ds_clientes: TfrxDBDataset
+    UserName = 'DSClientes'
+    CloseDataSource = False
+    DataSet = query_Clientes
+    BCDToCurrency = False
+    DataSetOptions = []
+    Left = 197
+    Top = 153
+  end
+  object frxReport1: TfrxReport
+    Version = '2022.1.3'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick, pbCopy, pbSelection]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Padr'#227'o'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 45456.945307696800000000
+    ReportOptions.LastChange = 45459.518248564820000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      'begin'
+      ''
+      'end.')
+    Left = 112
+    Top = 153
+    Datasets = <
+      item
+        DataSet = rel_ds_clientes
+        DataSetName = 'DSClientes'
+      end
+      item
+        DataSet = dm.rel_ds_cidades
+        DataSetName = 'DSCidades'
+      end
+      item
+        DataSet = dm.rel_ds_clientes
+        DataSetName = 'DSClientes'
+      end>
+    Variables = <>
+    Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      PaperWidth = 210.000000000000000000
+      PaperHeight = 297.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      Frame.Typ = []
+      MirrorMode = []
+      object ReportTitle1: TfrxReportTitle
+        FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
+        Height = 86.929190000000000000
+        Top = 18.897650000000000000
+        Width = 718.110700000000000000
+        object Memo4: TfrxMemoView
+          AllowVectorExport = True
+          Left = 196.535560000000000000
+          Top = 3.779530000000000000
+          Width = 362.834880000000000000
+          Height = 37.795300000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -27
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'RELAT'#211'RIO DE CLIENTES')
+          ParentFont = False
+        end
+        object Memo1: TfrxMemoView
+          AllowVectorExport = True
+          Left = 60.472480000000000000
+          Top = 60.472480000000000000
+          Width = 94.488250000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -19
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'Nome')
+          ParentFont = False
+        end
+        object Memo2: TfrxMemoView
+          AllowVectorExport = True
+          Left = 309.921460000000000000
+          Top = 60.472480000000000000
+          Width = 94.488250000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -19
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'CPF')
+          ParentFont = False
+        end
+        object Memo3: TfrxMemoView
+          AllowVectorExport = True
+          Left = 566.929500000000000000
+          Top = 60.472480000000000000
+          Width = 109.606370000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -19
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'TELEFONE')
+          ParentFont = False
+        end
+      end
+      object MasterData1: TfrxMasterData
+        FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
+        Height = 18.897650000000000000
+        Top = 166.299320000000000000
+        Width = 718.110700000000000000
+        DataSet = rel_ds_clientes
+        DataSetName = 'DSClientes'
+        RowCount = 0
+        object DSClientesNome: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Left = 49.133890000000000000
+          Width = 170.078850000000000000
+          Height = 18.897650000000000000
+          DataField = 'Nome'
+          DataSet = rel_ds_clientes
+          DataSetName = 'DSClientes'
+          Frame.Typ = []
+          Memo.UTF8W = (
+            '[DSClientes."Nome"]')
+        end
+        object DSClientesCGC_CPF_Cliente: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Left = 294.803340000000000000
+          Width = 158.740260000000000000
+          Height = 18.897650000000000000
+          DataField = 'CGC_CPF_Cliente'
+          DataSet = rel_ds_clientes
+          DataSetName = 'DSClientes'
+          Frame.Typ = []
+          Memo.UTF8W = (
+            '[DSClientes."CGC_CPF_Cliente"]')
+        end
+        object DSClientesTelefone: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Left = 566.929500000000000000
+          Width = 120.944960000000000000
+          Height = 18.897650000000000000
+          DataField = 'Telefone'
+          DataSet = rel_ds_clientes
+          DataSetName = 'DSClientes'
+          Frame.Typ = []
+          Memo.UTF8W = (
+            '[DSClientes."Telefone"]')
+        end
+      end
+      object Page: TfrxMemoView
+        IndexTag = 1
+        AllowVectorExport = True
+        Left = 638.740570000000000000
+        Top = 1028.032160000000000000
+        Width = 79.370130000000000000
+        Height = 18.897650000000000000
+        Frame.Typ = []
+        Memo.UTF8W = (
+          '[Page]')
+      end
+      object Date: TfrxMemoView
+        IndexTag = 1
+        AllowVectorExport = True
+        Left = 3.779530000000000000
+        Top = 1028.032160000000000000
+        Width = 79.370130000000000000
+        Height = 18.897650000000000000
+        Frame.Typ = []
+        Memo.UTF8W = (
+          '[Date]')
+      end
+      object Time: TfrxMemoView
+        IndexTag = 1
+        AllowVectorExport = True
+        Left = 86.929190000000000000
+        Top = 1028.032160000000000000
+        Width = 79.370130000000000000
+        Height = 18.897650000000000000
+        Frame.Typ = []
+        Memo.UTF8W = (
+          '[Time]')
+      end
+    end
+  end
+end
